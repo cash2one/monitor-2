@@ -24,10 +24,6 @@ if __name__ == '__main__':
                     help=u'节目名称')
     opt.add_option('-m', dest='mode', 
                     help=u'运行模式("直播模式：live, 点播模式：movie")')
-    opt.add_option('-t', dest='limit_time', 
-                    help=u'以时间限制：时间长度(秒为单位)')
-    opt.add_option('-c', dest='limit_count', 
-                    help=u'以次数限制：次数')
 
     options, args = opt.parse_args()
     print options
