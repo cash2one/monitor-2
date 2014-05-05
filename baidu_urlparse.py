@@ -75,10 +75,10 @@ class BaiduParser(threading.Thread):
     
     def run(self):
         print '开始时间：', datetime.datetime.now()
-        for i in range(1,2,1):
+        for i in range(1,77,1):
             baidu_url, html = self.baidu_search(i)
             self.baidu_urlparse(baidu_url, html)
-        print self.result_list
+#print self.result_list
         save2mysql(self.result_list)
 
 if __name__ == '__main__':

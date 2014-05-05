@@ -3,18 +3,17 @@
 
 from optparse import OptionParser
 
-from libs import baidu_search,baidu_urlparse
+from baidu_urlparse import BaiduParser
 from log import loginf, logwarn, dbg, trace_err
 
 import daemon
 
 def main(args):
     title = args[0]
-    html = baidu_search(title)
-    baidu_urlparse(html)
-    fd = open("html", "w")
-    fd.write(html)
-    fd.close()
+    baiduparser = BaiduParser(title)
+    baiduparser.start()
+    baiduparser.join()
+    print title
 
 if __name__ == '__main__':
     opt = OptionParser()
@@ -32,4 +31,4 @@ if __name__ == '__main__':
         daemon.daemonize(noClose=False)
 
     loginf("监控系统启动...")
-    #main(args)
+    main(args)
