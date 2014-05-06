@@ -11,6 +11,19 @@ import logging
 import traceback
 from simplejson import dumps
 
+from optparse import OptionParser
+
+opt = OptionParser()
+opt.add_option('-d', dest='daemon', action='store_true', default=False,
+                help=u'以 Daemon 模式后台运行')
+opt.add_option('-p', dest='program',
+                help=u'节目名称')
+
+options, args = opt.parse_args()
+title = options.program
+if not title:
+    title = args[0]
+
 DEBUG = True
 LOG_PATH = '/tmp/log'  # 日志目录，使用时可根据需要修改
 
@@ -30,7 +43,7 @@ def log_handle(log_type):
         os.makedirs(logpath, 0775)
     log_name, path, level, template = {
         'info': (
-            'INF', logpath + '/out', logging.DEBUG,
+            'INF', logpath + '/%s-out' % title, logging.DEBUG,
             '%(asctime)s %(levelname)7s %(module)s.%(funcName)s : %(message)s'
         ),
         'error': (
