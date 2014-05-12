@@ -9,7 +9,7 @@ import os
 import datetime
 
 from log import loginf, logwarn, dbg, trace_err
-from libs import get_html
+from libs import get_html, is_monitor_result
 from save_to_database import save2mysql
 
 change_charset = lambda x: x.encode("utf-8").decode("utf-8")
@@ -56,16 +56,21 @@ class BaiduParser(threading.Thread):
             if title and url.startswith("http"):
                 search_time = datetime.datetime.now()
                 loginf("标题: %s" % title.encode("utf-8"))
-                loginf("正在抓取监控页: %s\n" % url.encode("utf-8"))
+                loginf("正在抓取监控页: %s" % url.encode("utf-8"))
                 html = get_html(url)
                 if html:
-                    values = (change_charset(baidu_url), search_time, change_charset(title), change_charset(url), change_charset(""))
-                    self.result_list.append(values)
+                    flag = is_monitor_result(title, html)
+                    if flag:
+                        loginf("监控到（%s: %s）包含下载等内容" % (title.encode("utf-8"), url.encode("utf-8")))
+                        values = (change_charset(baidu_url), search_time, change_charset(title), change_charset(url), change_charset(""))
+                        self.result_list.append(values)
+                    else:
+                        pass
+                loginf('\n\n')
             else:
                 # 遗露无标题的情况, 可write文件查看
                 print buf
                 print title, url
-#print html.encode("utf-8")
 
     def baidu_urlparse(self, baidu_url, content=""):
         html = content.replace("\n", "")
@@ -90,13 +95,12 @@ class BaiduParser(threading.Thread):
         for i in range(1,77,1):
             baidu_url, html = self.baidu_search(i)
             self.baidu_urlparse(baidu_url, html)
-#print self.result_list
         loginf("正在存入数据库")
         loginf("存入数据库的内容: %s" % self.result_list)
         save2mysql(self.result_list)
+        loginf("监控到的个数：%s" % len(self.result_list))
         loginf('结束时间：%s' % datetime.datetime.now())
-        loginf("本轮耗时: %s" % (time.time() - _t))
-        print len(self.result_list)
+        loginf("本轮耗时: %s s" % (time.time() - _t))
 
 if __name__ == '__main__':
     baiduparser = BaiduParser("百变大咖秀")

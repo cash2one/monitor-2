@@ -31,6 +31,14 @@ def get_html(url):
         logerr("url = %s" % url)
     return con
 
+def is_monitor_result(title, html):
+    flag = False
+    if u'在线' in title and u'在线' in html:
+        flag = True
+    if u'下载' in title and u'下载' in html:
+        flag = True
+    return flag
+
 if __name__ == '__main__':
     con = get_html("http://www.baidu.com")
     print con
