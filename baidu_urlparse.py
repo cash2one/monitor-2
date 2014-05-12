@@ -33,7 +33,7 @@ class BaiduParser(threading.Thread):
             html = res.read().decode('utf-8', 'ignore')
             return url, html
         except Exception, e:
-            print '出错啦'
+            logerr('出错啦')
             return '', ''
 
     def get_url_and_title(self, baidu_url, all_buf_list):
@@ -41,23 +41,18 @@ class BaiduParser(threading.Thread):
             title = ""
             url = ""
             res = etree.HTML(buf)
-            hrefs = res.xpath(u"//a")
-            if hrefs:
-                url = hrefs[0].attrib.get('href', None)
-                if url:
-                    if not url.startswith("http"):
-                        url = hrefs[-1].attrib.get('href', None)
-                else:
-                    url = hrefs[-1].attrib.get('href', None)
             tmp = res.xpath("//h3[@class='t']")
             if tmp:
                 title = tmp[0].xpath(u"string()")
-#print title.encode("utf-8"), url.encode("utf-8")
             else:
                 tmp = res.xpath("//h3[@class='t c-gap-bottom-small']")
                 if tmp:
                     title = tmp[0].xpath(u"string()")
-#print title.encode("utf-8"), url.encode("utf-8")
+            if tmp:
+                tmp = etree.HTML(etree.tostring(tmp[0]))
+                hrefs = tmp[0].xpath(u"//a")
+                if hrefs:
+                    url = hrefs[0].attrib.get('href', "")
             if title and url.startswith("http"):
                 search_time = datetime.datetime.now()
                 loginf("标题: %s" % title.encode("utf-8"))
@@ -79,7 +74,7 @@ class BaiduParser(threading.Thread):
             pass
         else:
             all_buf.extend(re.findall('(<table class="result.*? id=".*?)(?=</table>)', html))
-        if len(all_buf) != 10: 
+        if len(all_buf) != 10:
             pass
         if len(html) < 4000 and u"请输入以下验证码" in html:
             loginf('百度搜索被封了')
@@ -87,7 +82,7 @@ class BaiduParser(threading.Thread):
             import sys
             sys.exit()
         self.get_url_and_title(baidu_url, all_buf)
-    
+
     def run(self):
         import time
         _t = time.time()
@@ -108,5 +103,5 @@ if __name__ == '__main__':
     baiduparser.start()
     baiduparser.join()
     pass
-        
+
 
