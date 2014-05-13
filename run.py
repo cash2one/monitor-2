@@ -8,9 +8,9 @@ from log import loginf, logwarn, dbg, trace_err, options, args
 
 import daemon
 
-def main(title):
+def main(title, mode):
     loginf("title = %s" % title.decode("utf-8").encode("utf-8"))
-    baiduparser = BaiduParser(title)
+    baiduparser = BaiduParser(title, mode)
     baiduparser.start()
     baiduparser.join()
 
@@ -22,6 +22,7 @@ if __name__ == '__main__':
 
     loginf("监控系统启动...")
     title = options.program
+    mode = options.mode
     if not title:
         title = args[0]
-    main(title)
+    main(title, mode)

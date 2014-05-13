@@ -31,12 +31,17 @@ def get_html(url):
         logerr("url = %s" % url)
     return con
 
-def is_monitor_result(title, html):
+def is_monitor_result(title, html, mode):
+    judge = lambda x: x in title and x in html
     flag = False
-    if u'在线' in title and u'在线' in html:
-        flag = True
-    if u'下载' in title and u'下载' in html:
-        flag = True
+    if mode == 'tv':
+        if judge(u'在线直播'):
+            flag = True
+    elif mode == 'movie':
+        if (judge(u'下载') or judge(u'在线观看') or judge(u'在线点播'))\
+                                and ((u'游戏下载') not in html)\
+                                and ((u'游戏专区') not in title):
+            flag = True
     return flag
 
 if __name__ == '__main__':

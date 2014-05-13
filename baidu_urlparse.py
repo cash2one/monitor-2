@@ -15,9 +15,10 @@ from save_to_database import save2mysql
 change_charset = lambda x: x.encode("utf-8").decode("utf-8")
 
 class BaiduParser(threading.Thread):
-    def __init__(self, search_content=""):
+    def __init__(self, search_content="", mode="tv"):
         super(BaiduParser, self).__init__()
         self.content = search_content
+        self.mode = mode
         self.result_list = []
 
     def baidu_search(self, page=0):
@@ -56,17 +57,16 @@ class BaiduParser(threading.Thread):
             if title and url.startswith("http"):
                 search_time = datetime.datetime.now()
                 loginf("标题: %s" % title.encode("utf-8"))
-                loginf("正在抓取监控页: %s" % url.encode("utf-8"))
+                loginf("url : %s" % url.encode("utf-8"))
                 html = get_html(url)
                 if html:
-                    flag = is_monitor_result(title, html)
+                    flag = is_monitor_result(title, html, self.mode)
                     if flag:
-                        loginf("监控到（%s: %s）包含下载等内容" % (title.encode("utf-8"), url.encode("utf-8")))
+                        loginf("监控到（%s: %s）包含下载等内容\n\n" % (title.encode("utf-8"), url.encode("utf-8")))
                         values = (change_charset(baidu_url), search_time, change_charset(title), change_charset(url), change_charset(""))
                         self.result_list.append(values)
                     else:
                         pass
-                loginf('\n\n')
             else:
                 # 遗露无标题的情况, 可write文件查看
                 print buf

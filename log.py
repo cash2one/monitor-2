@@ -3,7 +3,7 @@
 #
 #  log
 #
-#  Author: Zhang Xu <xu.zhang@chinacache.com>
+#  Author: Guanpei Li <liguanpei@github.com.com>
 
 import os
 import sys
@@ -17,7 +17,9 @@ opt = OptionParser()
 opt.add_option('-d', dest='daemon', action='store_true', default=False,
                 help=u'以 Daemon 模式后台运行')
 opt.add_option('-p', dest='program',
-                help=u'节目名称')
+                help=u'影视名称')
+opt.add_option('-m', dest='mode',
+                help=u'检测类型(tv, movie)')
 
 options, args = opt.parse_args()
 title = options.program
