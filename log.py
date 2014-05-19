@@ -13,6 +13,8 @@ from simplejson import dumps
 
 from optparse import OptionParser
 
+# example: python run.py -p 百变大咖秀 -m tv -t 21:30 -d
+
 opt = OptionParser()
 opt.add_option('-d', dest='daemon', action='store_true', default=False,
                 help=u'以 Daemon 模式后台运行')
@@ -20,6 +22,9 @@ opt.add_option('-p', dest='program',
                 help=u'影视名称')
 opt.add_option('-m', dest='mode',
                 help=u'检测类型(tv, movie)')
+opt.add_option('-t', dest='cycle',
+                help=u'运行周期(时间间隔，时间点)') #t设置为时间间隔时，系统每t小时执行一次，t设置为时间点时，
+                                                   #系统在每天的时间点执行一次，时间点的格式为'时：分'，不包含秒
 
 options, args = opt.parse_args()
 title = options.program

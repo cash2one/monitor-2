@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
+# -*- coding: utf-8 -*- 
 import threading
 import urllib, urllib2
 from lxml import etree
@@ -8,7 +7,7 @@ import re
 import os
 import datetime
 
-from log import loginf, logwarn, dbg, trace_err
+from log import loginf, logerr, dbg, trace_err
 from libs import get_html, is_monitor_result
 from save_to_database import save2mysql
 
@@ -34,7 +33,7 @@ class BaiduParser(threading.Thread):
             html = res.read().decode('utf-8', 'ignore')
             return url, html
         except Exception, e:
-            logerr('出错啦')
+            logerr(str(e))
             return '', ''
 
     def get_url_and_title(self, baidu_url, all_buf_list):
@@ -63,14 +62,13 @@ class BaiduParser(threading.Thread):
                     flag = is_monitor_result(title, html, self.mode)
                     if flag:
                         loginf("监控到（%s: %s）包含下载等内容\n\n" % (title.encode("utf-8"), url.encode("utf-8")))
-                        values = (change_charset(baidu_url), search_time, change_charset(title), change_charset(url), change_charset(""))
+                        values = (change_charset(baidu_url), search_time, change_charset(title), change_charset(url), self.content)
                         self.result_list.append(values)
                     else:
                         pass
             else:
                 # 遗露无标题的情况, 可write文件查看
-                print buf
-                print title, url
+                loginf("标题解析为空, url: %s" % url.encode("utf-8"))
 
     def baidu_urlparse(self, baidu_url, content=""):
         html = content.replace("\n", "")

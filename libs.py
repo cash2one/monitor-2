@@ -11,12 +11,10 @@ def get_html(url):
         req = urllib2.urlopen(url, timeout=3)
         con = req.read().decode('utf-8', 'ignore')
         if len(con) < 4000 and u"请输入以下验证码" in con:
-            print url
-            print '被封了'
+            loginf("百度被封了, url: %s" % url.encode("utf-8"))
         req.close()
     except Exception, e:
         if "timed out" in str(e):
-            print 'time out '
             try:
                 req = urllib2.urlopen(url, timeout=20)
                 con = req.read().decode('utf-8', 'ignore')
