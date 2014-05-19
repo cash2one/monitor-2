@@ -27,7 +27,7 @@ class JudgeCycle(threading.Thread):
                     loginf("设置周期命令：%s" % cmd)
             else:
                 loginf("%s的周期已经设置，请打开/var/spool/cron/crontabs/root修改" % self.title)
-        except exception, e:
+        except Exception, e:
                 logerr("周期设置失败：%s" % str(e))
 
 if __name__ == '__main__':

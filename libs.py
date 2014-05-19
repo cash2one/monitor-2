@@ -16,7 +16,7 @@ def get_html(url):
     except Exception, e:
         if "timed out" in str(e):
             try:
-                req = urllib2.urlopen(url, timeout=20)
+                req = urllib2.urlopen(url, timeout=10)
                 con = req.read().decode('utf-8', 'ignore')
                 req.close()
                 return con
