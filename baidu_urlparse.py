@@ -90,7 +90,7 @@ class BaiduParser(threading.Thread):
         import time
         _t = time.time()
         loginf('开始时间：%s' % datetime.datetime.now())
-        for i in range(1,77,1):
+        for i in range(1,3,1):
             baidu_url, html = self.baidu_search(i)
             self.baidu_urlparse(baidu_url, html)
         loginf("正在存入数据库")

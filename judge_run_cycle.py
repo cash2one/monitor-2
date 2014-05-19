@@ -6,6 +6,9 @@ import threading
 
 from log import loginf, logerr
 
+CRON_FILE = '/var/spool/cron/crontabs/root'
+SRC_PATH = '/root/work/monitor/'
+
 class JudgeCycle(threading.Thread):
     def __init__(self, title, mode, cycle):
         super(JudgeCycle, self).__init__()
@@ -15,18 +18,22 @@ class JudgeCycle(threading.Thread):
 
     def run(self):
         loginf("正在设置运行周期")
+        src_file = os.path.join(SRC_PATH, "run.py")
+        loginf("源文件目录：%s" % src_file)
         try:
-            fd = open('/var/spool/cron/crontabs/root')
+            fd = open(CRON_FILE, 'a+')
             con = fd.read()
             fd.close()
-            if self.title not in con:
-                if ":" not in str(self.cycle):
-                    src = "*/%s * * * * python run.py -p %s -m %s -d" % (self.cycle, self.title, self.mode)
-                    cmd = """echo '%s' >> /var/spool/cron/crontabs/root""" % src
-                    os.system(cmd)
-                    loginf("设置周期命令：%s" % cmd)
-            else:
-                loginf("%s的周期已经设置，请打开/var/spool/cron/crontabs/root修改" % self.title)
+            if self.title in con:
+                cmd = "sed -i /%s/d %s" % (self.title, CRON_FILE)
+                os.system(cmd)
+                loginf("正在删除原始周期：%s" % cmd)
+            if ":" not in str(self.cycle):
+                src = "*/%s * * * * python %s -p %s -m %s -d" % (self.cycle, src_file, self.title, self.mode)
+                cmd = """echo '%s' >> %s""" % (src, CRON_FILE)
+                os.system(cmd)
+                loginf("设置周期命令：%s" % cmd)
+            os.system("crontab %s" % CRON_FILE)
         except Exception, e:
                 logerr("周期设置失败：%s" % str(e))
 
