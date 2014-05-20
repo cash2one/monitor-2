@@ -33,6 +33,15 @@ class JudgeCycle(threading.Thread):
                 cmd = """echo '%s' >> %s""" % (src, CRON_FILE)
                 os.system(cmd)
                 loginf("设置周期命令：%s" % cmd)
+            else:
+                tmp = self.cycle.split(":")
+                week = tmp[0].split("-")[0]
+                hour = tmp[0].split("-")[1]
+                minute = tmp[1]
+                src = "%s %s * * %s python %s -p %s -m %s -d" % (minute, hour, week, src_file, self.title, self.mode)
+                cmd = """echo '%s' >> %s""" % (src, CRON_FILE)
+                os.system(cmd)
+                loginf("设置周期命令：%s" % cmd)
             os.system("crontab %s" % CRON_FILE)
         except Exception, e:
                 logerr("周期设置失败：%s" % str(e))

@@ -98,7 +98,7 @@ class BaiduParser(threading.Thread):
         save2mysql(self.result_list)
         loginf("监控到的个数：%s" % len(self.result_list))
         loginf('结束时间：%s' % datetime.datetime.now())
-        loginf("本轮耗时: %s s" % (time.time() - _t))
+        loginf("本轮耗时: %.2f s" % (time.time() - _t))
 
 if __name__ == '__main__':
     baiduparser = BaiduParser("百变大咖秀")
