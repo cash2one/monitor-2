@@ -61,7 +61,7 @@ class BaiduParser(threading.Thread):
                 if html:
                     flag = is_monitor_result(title, html, self.mode)
                     if flag:
-                        loginf("监控到（%s: %s）包含下载等内容\n\n" % (title.encode("utf-8"), url.encode("utf-8")))
+                        loginf("监控到（%s: %s ）包含下载等内容\n\n" % (title.encode("utf-8"), url.encode("utf-8")))
                         values = (change_charset(baidu_url), search_time, change_charset(title), change_charset(url), self.content)
                         self.result_list.append(values)
                     else:
@@ -90,7 +90,7 @@ class BaiduParser(threading.Thread):
         import time
         _t = time.time()
         loginf('开始时间：%s' % datetime.datetime.now())
-        for i in range(1,3,1):
+        for i in range(1,77,1):
             baidu_url, html = self.baidu_search(i)
             self.baidu_urlparse(baidu_url, html)
         loginf("正在存入数据库")
