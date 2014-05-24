@@ -18,6 +18,7 @@ class BaiduParser(threading.Thread):
         super(BaiduParser, self).__init__()
         self.content = search_content
         self.mode = mode
+        self.total = 0
         self.result_list = []
 
     def baidu_search(self, page=0):
@@ -61,9 +62,16 @@ class BaiduParser(threading.Thread):
                 if html:
                     flag = is_monitor_result(title, html, self.mode)
                     if flag:
-                        loginf("监控到（%s: %s ）包含下载等内容\n\n" % (title.encode("utf-8"), url.encode("utf-8")))
-                        values = (change_charset(baidu_url), search_time, change_charset(title), change_charset(url), self.content)
-                        self.result_list.append(values)
+                        loginf("监控到（%s: %s ）包含下载等内容" % (title.encode("utf-8"), url.encode("utf-8")))
+                        values = [change_charset(baidu_url), search_time, change_charset(title), change_charset(url), self.content, "www.baidu.com"]
+                        self.result_list = values 
+                        self.total += 1
+                        loginf("正在存入数据库")
+                        save_flag = save2mysql(self.result_list, self.content)
+                        if save_flag == True:
+                            loginf("数据保存成功\n\n")
+                        else:
+                            loginf("数据库已经包含该链接: %s\n\n", self.result_list[2].encode("utf-8"))
                     else:
                         pass
             else:
@@ -93,10 +101,7 @@ class BaiduParser(threading.Thread):
         for i in range(1,77,1):
             baidu_url, html = self.baidu_search(i)
             self.baidu_urlparse(baidu_url, html)
-        loginf("正在存入数据库")
-        loginf("存入数据库的内容: %s" % self.result_list)
-        save2mysql(self.result_list)
-        loginf("监控到的个数：%s" % len(self.result_list))
+        loginf("监控到的个数：%s" % self.total)
         loginf('结束时间：%s' % datetime.datetime.now())
         loginf("本轮耗时: %.2f s" % (time.time() - _t))
 
