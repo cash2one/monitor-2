@@ -42,6 +42,16 @@ class BaiduParser(threading.Thread):
             title = ""
             url = ""
             res = etree.HTML(buf)
+
+            show_url = ""
+            tmp = res.xpath("//div[@class='g']")
+            if tmp:
+                show_url = tmp[0].xpath(u"string()")
+            else:
+                tmp = res.xpath("//span[@class='c-showurl']")
+                if tmp:
+                    show_url = tmp[0].xpath(u"string()")
+
             tmp = res.xpath("//h3[@class='t']")
             if tmp:
                 title = tmp[0].xpath(u"string()")
@@ -63,7 +73,8 @@ class BaiduParser(threading.Thread):
                     flag = is_monitor_result(title, html, self.mode)
                     if flag:
                         loginf("监控到（%s: %s ）包含下载等内容" % (title.encode("utf-8"), url.encode("utf-8")))
-                        values = [change_charset(baidu_url), search_time, change_charset(title), change_charset(url), self.content, "www.baidu.com"]
+                        values = [change_charset(baidu_url), search_time, change_charset(title), change_charset(url),\
+                                 self.content, change_charset(show_url)]
                         self.result_list = values 
                         self.total += 1
                         loginf("正在存入数据库")
