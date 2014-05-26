@@ -38,6 +38,7 @@ def is_monitor_result(title, html, mode, search_content):
     elif mode == 'movie':
         if "游戏" not in search_content:
             if (judge(u'下载') or judge(u'在线观看') or judge(u'在线点播'))\
+                                and ((u'游戏介绍') not in html)\
                                 and ((u'游戏下载') not in html)\
                                 and ((u'游戏') not in title)\
                                 and ((u'预告') not in title)\
