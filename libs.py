@@ -29,17 +29,27 @@ def get_html(url):
         logerr("url = %s" % url)
     return con
 
-def is_monitor_result(title, html, mode):
+def is_monitor_result(title, html, mode, search_content):
     judge = lambda x: x in title and x in html
     flag = False
     if mode == 'tv':
-        if judge(u'在线直播'):
+        if judge(u'直播') and ((u'预告') not in title):
             flag = True
     elif mode == 'movie':
-        if (judge(u'下载') or judge(u'在线观看') or judge(u'在线点播'))\
+        if "游戏" not in search_content:
+            if (judge(u'下载') or judge(u'在线观看') or judge(u'在线点播'))\
                                 and ((u'游戏下载') not in html)\
-                                and ((u'游戏专区') not in title):
-            flag = True
+                                and ((u'游戏') not in title)\
+                                and ((u'预告') not in title)\
+                                and ((u'软件') not in title):
+                flag = True
+        else:
+            if (judge(u'下载') or judge(u'在线观看') or judge(u'在线点播'))\
+                                and ((u'游戏下载') not in html)\
+                                and ((u'预告') not in title)\
+                                and ((u'软件') not in title):
+             
+                flag = True
     return flag
 
 if __name__ == '__main__':

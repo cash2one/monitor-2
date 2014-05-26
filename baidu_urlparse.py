@@ -41,16 +41,18 @@ class BaiduParser(threading.Thread):
         for buf in all_buf_list:
             title = ""
             url = ""
-            res = etree.HTML(buf)
+            res = etree.HTML(etree.tostring(buf))
 
             show_url = ""
             tmp = res.xpath("//div[@class='g']")
+            if not tmp:
+            	tmp = res.xpath("//div[@class='g']")
+            if not tmp:
+                tmp = res.xpath("//span[@class='c-showurl']")
+            if not tmp:
+                tmp = res.xpath("//span[@class='g']")
             if tmp:
                 show_url = tmp[0].xpath(u"string()")
-            else:
-                tmp = res.xpath("//span[@class='c-showurl']")
-                if tmp:
-                    show_url = tmp[0].xpath(u"string()")
 
             tmp = res.xpath("//h3[@class='t']")
             if tmp:
@@ -68,11 +70,12 @@ class BaiduParser(threading.Thread):
                 search_time = datetime.datetime.now()
                 loginf("标题: %s" % title.encode("utf-8"))
                 loginf("url : %s" % url.encode("utf-8"))
+                loginf("showurl : %s" % show_url.encode("utf-8"))
                 html = get_html(url)
                 if html:
-                    flag = is_monitor_result(title, html, self.mode)
+                    flag = is_monitor_result(title, html, self.mode, self.content)
                     if flag:
-                        loginf("监控到（%s: %s ）包含下载等内容" % (title.encode("utf-8"), url.encode("utf-8")))
+                        loginf("监控到（%s: %s ）包含下载或播放等内容" % (title.encode("utf-8"), url.encode("utf-8")))
                         values = [change_charset(baidu_url), search_time, change_charset(title), change_charset(url),\
                                  self.content, change_charset(show_url)]
                         self.result_list = values 
@@ -89,13 +92,14 @@ class BaiduParser(threading.Thread):
                 # 遗露无标题的情况, 可write文件查看
                 loginf("标题解析为空, url: %s" % url.encode("utf-8"))
 
-    def baidu_urlparse(self, baidu_url, content=""):
+    def baidu_urlparse(self, baidu_url, content="", page=0):
         html = content.replace("\n", "")
-        all_buf = re.findall('(<div class="result.*? id=".*?)(?=</div>)', html)
-        if len(all_buf) == 10:
-            pass
-        else:
-            all_buf.extend(re.findall('(<table class="result.*? id=".*?)(?=</table>)', html))
+        res = etree.HTML(html)
+        all_buf = []
+        for i in range(10*page-9, 10*page+1):
+            tmp = res.xpath("//div[@id='%s']" % i)
+            if tmp:
+                all_buf.append(tmp[0])
         if len(all_buf) != 10:
             pass
         if len(html) < 4000 and u"请输入以下验证码" in html:
@@ -111,7 +115,10 @@ class BaiduParser(threading.Thread):
         loginf('开始时间：%s' % datetime.datetime.now())
         for i in range(1,77,1):
             baidu_url, html = self.baidu_search(i)
-            self.baidu_urlparse(baidu_url, html)
+            if baidu_url and html:
+                self.baidu_urlparse(baidu_url, html, i)
+            else:
+                loginf("百度搜索抓取为空") 
         loginf("监控到的个数：%s" % self.total)
         loginf('结束时间：%s' % datetime.datetime.now())
         loginf("本轮耗时: %.2f s" % (time.time() - _t))
