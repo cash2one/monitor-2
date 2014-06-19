@@ -6,7 +6,7 @@ import MySQLdb
 
 def main(title):
     try:
-        conn=MySQLdb.connect(host='localhost',user='root',passwd='123456',port=3306,charset="utf8")
+        conn=MySQLdb.connect(host='localhost',user='root',passwd='123',port=3306,charset="utf8")
         cur=conn.cursor()
         conn.select_db('monitor')
         cmd = 'select * from search_result_table where key_words = "%s";' % title

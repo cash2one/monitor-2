@@ -6,7 +6,7 @@ from log import loginf
 
 def save2mysql(value_list, title):
     save_flag = True
-    conn = MySQLdb.connect(host='localhost', user='root', passwd='123456', port=3306, charset='utf8')
+    conn = MySQLdb.connect(host='localhost', user='root', passwd='123', port=3306, charset='utf8')
     cur = conn.cursor()
 
     try:
