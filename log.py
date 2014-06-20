@@ -25,6 +25,10 @@ opt.add_option('-m', dest='mode',
 opt.add_option('-t', dest='cycle',
                 help=u'运行周期(时间间隔，时间点)') #t设置为时间间隔时，系统每t小时执行一次，t设置为时间点时，
                                                    #系统在每天的时间点执行一次，时间点的格式为'时：分'，不包含秒
+opt.add_option('-U', dest='userid',
+                help=u'userID')
+opt.add_option('-T', dest='taskid',
+                help=u'taskID')
 
 options, args = opt.parse_args()
 title = options.program

@@ -14,10 +14,12 @@ from save_to_database import save2mysql
 change_charset = lambda x: x.encode("utf-8").decode("utf-8")
 
 class BaiduParser(threading.Thread):
-    def __init__(self, search_content="", mode="tv"):
+    def __init__(self, search_content="", mode="tv", userid=0, taskid=0):
         super(BaiduParser, self).__init__()
         self.content = search_content
         self.mode = mode
+        self.userid = userid
+        self.taskid = taskid
         self.total = 0
         self.result_list = []
 
@@ -77,7 +79,7 @@ class BaiduParser(threading.Thread):
                     if flag:
                         loginf("监控到（%s: %s ）包含下载或播放等内容" % (title.encode("utf-8"), url.encode("utf-8")))
                         values = [change_charset(baidu_url), search_time, change_charset(title), change_charset(url),\
-                                 self.content, change_charset(show_url)]
+                                 self.content, change_charset(show_url), None,0,None, self.taskid, self.userid]
                         self.result_list = values 
                         self.total += 1
                         loginf("正在存入数据库")
