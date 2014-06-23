@@ -78,6 +78,9 @@ class BaiduParser(threading.Thread):
                     flag = is_monitor_result(title, html, self.mode, self.content)
                     if flag:
                         loginf("监控到（%s: %s ）包含下载或播放等内容" % (title.encode("utf-8"), url.encode("utf-8")))
+                        k_words = u"百度快照"
+                        if k_words in show_url:
+                            show_url = show_url.split(k_words)[0]
                         values = [change_charset(baidu_url), search_time, change_charset(title), change_charset(url),\
                                  self.content, change_charset(show_url), None,0,None, self.taskid, self.userid]
                         self.result_list = values 
