@@ -68,6 +68,8 @@ class BaiduParser(threading.Thread):
                 hrefs = tmp[0].xpath(u"//a")
                 if hrefs:
                     url = hrefs[0].attrib.get('href', "")
+            if url.startswith("//"):
+                url = "http:" + url
             if title and url.startswith("http"):
                 search_time = datetime.datetime.now()
                 loginf("标题: %s" % title.encode("utf-8"))
