@@ -10,11 +10,13 @@ CRON_FILE = '/var/spool/cron/crontabs/root'
 SRC_PATH = '/root/work/monitor/'
 
 class JudgeCycle(threading.Thread):
-    def __init__(self, title, mode, cycle):
+    def __init__(self, title, mode, cycle, userid, taskid):
         super(JudgeCycle, self).__init__()
         self.title = title
         self.mode = mode
         self.cycle = cycle
+        self.userid = userid
+        self.taskid = taskid
 
     def run(self):
         loginf("正在设置运行周期")
