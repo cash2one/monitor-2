@@ -33,7 +33,7 @@ def is_monitor_result(title, html, mode, search_content):
     judge = lambda x: x in title and x in html
     flag = False
     if mode == 'tv':
-        if judge(u'直播') and ((u'预告') not in title) and (search_content in title):
+        if judge(u'直播') and ((u'预告') not in title) and (search_content in title.encode("utf-8")):
             flag = True
     elif mode == 'movie':
         if "游戏" not in search_content:
