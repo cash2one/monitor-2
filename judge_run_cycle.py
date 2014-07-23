@@ -31,7 +31,7 @@ class JudgeCycle(threading.Thread):
                 os.system(cmd)
                 loginf("正在删除原始周期：%s" % cmd)
             if ":" not in str(self.cycle):
-                src = "*/%s * * * * python %s -p %s -m %s -d" % (self.cycle, src_file, self.title, self.mode)
+                src = "*/%s * * * * python %s -p %s -m %s -U %s -T %s -d" % (self.cycle, src_file, self.title, self.mode, self.userid, self.taskid)
                 cmd = """echo '%s' >> %s""" % (src, CRON_FILE)
                 os.system(cmd)
                 loginf("设置周期命令：%s" % cmd)
@@ -40,7 +40,7 @@ class JudgeCycle(threading.Thread):
                 week = tmp[0].split("-")[0]
                 hour = tmp[0].split("-")[1]
                 minute = tmp[1]
-                src = "%s %s * * %s python %s -p %s -m %s -d" % (minute, hour, week, src_file, self.title, self.mode)
+                src = "%s %s * * %s python %s -p %s -m %s -U %s -T %s -d" % (minute, hour, week, src_file, self.title, self.mode, self.userid, self.taskid)
                 cmd = """echo '%s' >> %s""" % (src, CRON_FILE)
                 os.system(cmd)
                 loginf("设置周期命令：%s" % cmd)
