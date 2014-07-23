@@ -14,7 +14,7 @@ def main(title, mode, cycle, userid, taskid):
     baiduparser.start()
     baiduparser.join()
     if cycle:
-        judgecycle = JudgeCycle(title, mode, cycle)
+        judgecycle = JudgeCycle(title, mode, cycle, userid, taskid)
         judgecycle.start()
         judgecycle.join()
 
