@@ -7,7 +7,7 @@ import threading
 from log import loginf, logerr
 
 CRON_FILE = '/var/spool/cron/crontabs/root'
-SRC_PATH = '/root/work/monitor/'
+SRC_PATH = '/home/monitor/'
 
 class JudgeCycle(threading.Thread):
     def __init__(self, title, mode, cycle, userid, taskid):
