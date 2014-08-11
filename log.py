@@ -32,6 +32,7 @@ opt.add_option('-T', dest='taskid',
 
 options, args = opt.parse_args()
 title = options.program
+mode = options.mode
 if not title:
     title = args[0]
 
@@ -54,7 +55,7 @@ def log_handle(log_type):
         os.makedirs(logpath, 0775)
     log_name, path, level, template = {
         'info': (
-            'INF', logpath + '/%s-out' % title, logging.DEBUG,
+            'INF', logpath + '/%s-%s-out' % (title, mode), logging.DEBUG,
             '%(asctime)s %(levelname)7s %(module)s.%(funcName)s : %(message)s'
         ),
         'error': (
