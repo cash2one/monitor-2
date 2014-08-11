@@ -26,10 +26,10 @@ class JudgeCycle(threading.Thread):
             fd = open(CRON_FILE, 'a+')
             con = fd.read()
             fd.close()
-            if self.title in con:
-                cmd = "sed -i /%s/d %s" % (self.title, CRON_FILE)
-                os.system(cmd)
-                loginf("正在删除原始周期：%s" % cmd)
+            #if self.title in con:
+                #cmd = "sed -i /%s/d %s" % (self.title, CRON_FILE)
+                #os.system(cmd)
+                #loginf("正在删除原始周期：%s" % cmd)
             if ":" not in str(self.cycle):
                 src = "0 */%s * * * python %s -p %s -m %s -U %s -T %s -d" % (self.cycle, src_file, self.title, self.mode, self.userid, self.taskid)
                 cmd = """echo '%s' >> %s""" % (src, CRON_FILE)
